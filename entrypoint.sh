@@ -46,9 +46,13 @@ git fetch
 echo -e "\e[34mChecking out to target branch"
 git checkout "${TARGET_BRANCH}"
 
+# make sure we are up to date in target branch
+echo -e "\e[34mPulling latest changes for target branch"
+git pull
+
 # rebase from base branch
-echo -e "\e[34mRebasing from base branch"
-git rebase
+echo -e "\e[34mMerging base branch into target branch"
+git merge master
 
 # commit changes
 echo -e "\e[34mUploding changes"
