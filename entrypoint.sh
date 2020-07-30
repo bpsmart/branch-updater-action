@@ -54,10 +54,18 @@ git pull
 echo -e "\e[34mMerging base branch into target branch"
 git merge master
 
+# Checking to see if we need to commit
+STATUS=$(git status -s)
+if [[ ${STATUS} == "" ]]; then
+  echo -e "\e[33mNo need to commit. Attempting push"
+  git push origin "${TARGET_BRANCH}"
+  echo "Success!"
+  exit 0
+fi
+
 # commit changes
 echo -e "\e[34mUploding changes"
 git add .
 git commit -m "Auto update from ${BASE_BRANCH} into ${TARGET_BRANCH}"
 git push origin "${TARGET_BRANCH}"
-
 echo "Success!"
