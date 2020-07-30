@@ -15,7 +15,15 @@ git config --global user.name "BPSmart Developer Bot"
 git config --global user.email "dev.ci@bpsmart.ai"
 
 BASE_BRANCH=$(echo ${GITHUB_REF##*/})
-echo "Current branch is ${BASE_BRANCH}"
+echo "Base branch is ${BASE_BRANCH}"
+
+TARGET_BRANCH=$(if [[ "$BASE_BRANCH" == "master" ]]; then echo "qa"; elif [[ "$BASE_BRANCH" == "qa" ]]; then echo "dev"; else echo ""; fi)
+echo "Target branch is ${BASE_BRANCH}"
+
+if [[ ${TARGET_BRANCH} == "" ]]; then
+  echo -e "\e[33mNot targeting base branches"
+  exit 0
+fi
 
 # create work directory
 echo -e "\e[34mCreating temporary work directory in /tmp"
@@ -29,5 +37,23 @@ git clone --depth=1 --branch="${BASE_BRANCH}" "https://${GITHUB_ACTOR}:${GITHUB_
 # make sure we are up to date
 echo -e "\e[34mPulling latest changes"
 git pull
+
+# fetch all branches
+echo -e "\e[34mFetching all branches"
+git fetch
+
+# checkout to target branch
+echo -e "\e[34mChecking out to target branch"
+git checkout "${TARGET_BRANCH}"
+
+# rebase from base branch
+echo -e "\e[34mRebasing from base branch"
+git rebase
+
+# commit changes
+echo -e "\e[34mUploding changes"
+git add .
+git commit -m "Auto update from ${BASE_BRANCH} into ${TARGET_BRANCH}"
+git push origin "${TARGET_BRANCH}"
 
 echo "Success!"
