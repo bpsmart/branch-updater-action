@@ -34,13 +34,17 @@ pushd "${WORK_DIR}" || exit 1
 echo -e "\e[34mCloning ${BASE_BRANCH} of ${REPO} into ${WORK_DIR}"
 git clone "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${REPO}" .
 
-# make sure we are up to date
-echo -e "\e[34mPulling latest changes"
-git pull
-
 # fetch all branches
 echo -e "\e[34mFetching all branches"
 git fetch
+
+# checkout to base branch
+echo -e "\e[34mChecking out to base branch"
+git checkout "${BASE_BRANCH}"
+
+# make sure we are up to date
+echo -e "\e[34mPulling latest changes"
+git pull
 
 # checkout to target branch
 echo -e "\e[34mChecking out to target branch"
@@ -52,7 +56,7 @@ git pull
 
 # rebase from base branch
 echo -e "\e[34mMerging base branch into target branch"
-git merge master
+git merge "${BASE_BRANCH}"
 
 # Checking to see if we need to commit
 STATUS=$(git status -s)
