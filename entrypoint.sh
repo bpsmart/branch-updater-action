@@ -18,7 +18,7 @@ BASE_BRANCH=$(echo ${GITHUB_REF##*/})
 echo "Base branch is ${BASE_BRANCH}"
 
 TARGET_BRANCH=$(if [[ "$BASE_BRANCH" == "master" ]]; then echo "qa"; elif [[ "$BASE_BRANCH" == "qa" ]]; then echo "dev"; else echo ""; fi)
-echo "Target branch is ${BASE_BRANCH}"
+echo "Target branch is ${TARGET_BRANCH}"
 
 if [[ ${TARGET_BRANCH} == "" ]]; then
   echo -e "\e[33mNot targeting base branches"
@@ -32,7 +32,7 @@ pushd "${WORK_DIR}" || exit 1
 
 # clone repository
 echo -e "\e[34mCloning ${BASE_BRANCH} of ${REPO} into ${WORK_DIR}"
-git clone --depth=1 --branch="${BASE_BRANCH}" "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${REPO}" .
+git clone "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${REPO}" .
 
 # make sure we are up to date
 echo -e "\e[34mPulling latest changes"
