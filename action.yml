@@ -1,0 +1,5 @@
+name: 'Branches Updater Bot'
+description: 'Updates branches to make them consistent'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
